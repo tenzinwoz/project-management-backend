@@ -10,7 +10,8 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
   ) {}
-  createUser(user: CreateUserDto) {
+
+  async createUser(user: CreateUserDto) {
     const newUser = this.userRepo.create({
       ...user,
     });

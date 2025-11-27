@@ -1,6 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { setupSwagger } from 'src/shared/swagger/swagger-setup';
 import { AppModule } from 'src/app.module';
 import { ConfigService } from '@nestjs/config';
@@ -20,11 +24,14 @@ async function bootstrap() {
   // Enable global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      // transform: true,
+      whitelist: true, // it strips unknown fields from the DTO
+      forbidNonWhitelisted: true, // it throws an error if unknown fields are sent.
+      transform: true, // it transforms payloads to be objects typed according to their DTO classes
     }),
   );
+
+  // Enable global serialization interceptor
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector()));
 
   // Setup Swagger documentation
   setupSwagger(app);
