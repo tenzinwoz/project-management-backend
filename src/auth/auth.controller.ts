@@ -1,8 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  ApiAcceptedResponse,
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateUserResponseDto } from 'src/users/dto/create-user-response.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LoginUserResponseDto } from 'src/users/dto/login-user-response.dto';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
 @ApiTags('Auth')
 @Controller('auth')
@@ -14,9 +23,20 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiCreatedResponse({ type: CreateUserResponseDto })
+  @ApiConflictResponse({ description: 'User with this email already exists' })
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.createUser(createUserDto);
     return new CreateUserResponseDto(user);
+  }
+
+  @ApiOperation({ summary: 'Login a user' })
+  @ApiAcceptedResponse({ type: LoginUserResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid email or password' })
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const user = await this.usersService.loginUser(loginUserDto);
+    return user;
   }
 }
