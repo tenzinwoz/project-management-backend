@@ -1,11 +1,11 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
+import { Controller, Get } from '@nestjs/common';
+import { Public } from 'src/shared/decorators/is-public.decorator';
 
+@Public()
 @Controller('users')
 export class UsersController {
   constructor() {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('/all')
   getUsers() {
     return { message: 'List of users' };

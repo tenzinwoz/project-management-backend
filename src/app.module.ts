@@ -5,12 +5,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'src/shared/database/pm-db';
 import { GlobalJwtModule } from 'src/shared/jwt/global-jwt.module';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
     GlobalJwtModule,
 
     TypeOrmModule.forRootAsync({
@@ -22,6 +24,6 @@ import { GlobalJwtModule } from 'src/shared/jwt/global-jwt.module';
     UsersModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [JwtAuthGuard],
 })
 export class AppModule {}

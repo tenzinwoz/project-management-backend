@@ -8,11 +8,14 @@ import {
 import { setupSwagger } from 'src/shared/swagger/swagger-setup';
 import { AppModule } from 'src/app.module';
 import { ConfigService } from '@nestjs/config';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable URI versioning
+  // Apply global JWT Auth Guard
+  app.useGlobalGuards(app.get<JwtAuthGuard>(JwtAuthGuard));
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
