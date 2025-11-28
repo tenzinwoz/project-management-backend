@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
-export class CreateUserResponseDto {
+export class UserResponseDto {
   @ApiProperty()
   @Expose()
   id: number;
@@ -28,7 +28,7 @@ export class CreateUserResponseDto {
   @Expose()
   updatedAt: Date;
 
-  constructor(partial: Partial<CreateUserResponseDto>) {
+  constructor(partial: Partial<UserResponseDto>) {
     Object.assign(this, partial);
   }
 }
