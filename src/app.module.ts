@@ -4,12 +4,14 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'src/shared/database/pm-db';
+import { GlobalJwtModule } from 'src/shared/jwt/global-jwt.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    GlobalJwtModule,
 
     TypeOrmModule.forRootAsync({
       // name: 'PM_DB',
