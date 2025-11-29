@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
+import { plainToInstance } from 'class-transformer';
 import { LoginUserResponseDto } from 'src/auth/dto/login-user-response.dto';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -44,6 +45,6 @@ export class AuthService {
 
     const data = await this.generateTokens(payload);
 
-    return new LoginUserResponseDto(data);
+    return plainToInstance(LoginUserResponseDto, data);
   }
 }

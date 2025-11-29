@@ -13,6 +13,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserResponseDto } from 'src/auth/dto/login-user-response.dto';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { Public } from 'src/shared/decorators/is-public.decorator';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   @ApiCreatedResponse({ type: UserResponseDto })
   @ApiConflictResponse({ description: 'User with this email already exists' })
+  @Public()
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.createUser(createUserDto);
@@ -33,6 +35,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login a user' })
   @ApiAcceptedResponse({ type: LoginUserResponseDto })
   @ApiUnauthorizedResponse({ description: 'Invalid email or password' })
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto) {

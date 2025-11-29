@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { PaginatedResponseDto } from 'src/shared/dto/pagination.dto';
+import { UserRole } from 'src/users/constants';
 
 export class UserResponseDto {
   @ApiProperty()
@@ -20,6 +22,7 @@ export class UserResponseDto {
 
   @Exclude()
   password: string;
+
   @ApiProperty()
   @Expose()
   createdAt: Date;
@@ -28,7 +31,19 @@ export class UserResponseDto {
   @Expose()
   updatedAt: Date;
 
-  constructor(partial: Partial<UserResponseDto>) {
-    Object.assign(this, partial);
-  }
+  @ApiProperty({
+    description: 'The role assigned to the user',
+    example: UserRole.MEMBER,
+    enum: UserRole,
+  })
+  @Expose()
+  role: UserRole;
+}
+
+export class UserPaginatedResponseDto extends PaginatedResponseDto<UserResponseDto> {
+  @ApiProperty({
+    type: [UserResponseDto], // Explicitly tells Swagger what the array contains
+    description: 'Array of user records',
+  })
+  data: UserResponseDto[];
 }
