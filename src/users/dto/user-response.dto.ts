@@ -38,6 +38,13 @@ export class UserResponseDto {
   })
   @Expose()
   role: UserRole;
+
+  @ApiProperty({
+    description: 'Indicates whether the user is active',
+    example: true,
+  })
+  @Expose()
+  isActive: boolean;
 }
 
 export class UserPaginatedResponseDto extends PaginatedResponseDto<UserResponseDto> {

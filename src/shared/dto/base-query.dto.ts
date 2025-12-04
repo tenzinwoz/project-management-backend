@@ -9,7 +9,7 @@ export enum SORT {
   DESC = 'desc',
 }
 
-export class BaseQueryDto {
+export class BaseFilterQueryDto {
   @ApiProperty({
     required: false,
     description: 'Page number for pagination (default is 1)',

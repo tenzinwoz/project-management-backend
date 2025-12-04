@@ -1,5 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { UserRole } from 'src/users/constants';
 
 export class CreateUserDto {
@@ -33,4 +40,12 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   @IsNotEmpty()
   role: UserRole;
+
+  @ApiPropertyOptional({
+    description: 'Indicates whether the user is active',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

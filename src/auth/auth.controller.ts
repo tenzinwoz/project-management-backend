@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
-  ApiConflictResponse,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
@@ -24,7 +24,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiCreatedResponse({ type: UserResponseDto })
-  @ApiConflictResponse({ description: 'User with this email already exists' })
+  @ApiBadRequestResponse({ description: 'User with this email already exists' })
   @Public()
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
