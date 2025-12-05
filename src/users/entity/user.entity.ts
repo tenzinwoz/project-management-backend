@@ -1,3 +1,4 @@
+import { ProjectEntity } from 'src/projects/entity/project.entity';
 import { UserRole } from 'src/users/constants';
 import {
   Entity,
@@ -5,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -38,4 +40,7 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => ProjectEntity, (project) => project.user)
+  projects: ProjectEntity[];
 }

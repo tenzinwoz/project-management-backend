@@ -17,7 +17,7 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiProperty,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
@@ -33,9 +33,8 @@ import { UsersService } from 'src/users/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiProperty({
-    description: 'Get a paginated list of users',
-    example: {},
+  @ApiOperation({
+    summary: 'Get a paginated list of users',
   })
   @ApiOkResponse({
     description: 'Users retrieved successfully',
@@ -50,9 +49,8 @@ export class UsersController {
     return this.usersService.getUsers(params);
   }
 
-  @ApiProperty({
-    description: 'Get user by ID',
-    example: 1,
+  @ApiOperation({
+    summary: 'Get user by ID',
   })
   @ApiAcceptedResponse({
     description: 'User retrieved successfully',
@@ -67,9 +65,8 @@ export class UsersController {
     return this.usersService.findUserById(id);
   }
 
-  @ApiProperty({
-    description: 'Update user by ID',
-    example: 1,
+  @ApiOperation({
+    summary: 'Update user by ID',
   })
   @ApiAcceptedResponse({
     description: 'User updated successfully',
@@ -87,9 +84,8 @@ export class UsersController {
     return this.usersService.patchUser(id, body);
   }
 
-  @ApiProperty({
-    description: 'Delete user by ID',
-    example: 1,
+  @ApiOperation({
+    summary: 'Delete user by ID',
   })
   @ApiNoContentResponse({
     description: 'The user has been successfully deactivated.',
@@ -107,9 +103,8 @@ export class UsersController {
     return this.usersService.deleteUser(id);
   }
 
-  @ApiProperty({
-    description: 'Restore user by ID',
-    example: 1,
+  @ApiOperation({
+    summary: 'Restore user by ID',
   })
   @ApiNoContentResponse({
     description: 'The user has been successfully reactivated.',

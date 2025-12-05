@@ -35,7 +35,7 @@ async function bootstrap() {
 
   // Enable global serialization interceptor
   app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(new Reflector(), {
+    new ClassSerializerInterceptor(app.get(Reflector), {
       excludeExtraneousValues: true, // only properties with @Expose() will be included in the response
     }),
   );
