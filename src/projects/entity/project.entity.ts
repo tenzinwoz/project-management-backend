@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  JoinColumn,
   ManyToOne,
 } from 'typeorm';
 
@@ -38,6 +37,5 @@ export class ProjectEntity {
   updatedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.projects)
-  @JoinColumn()
   user: UserEntity;
 }

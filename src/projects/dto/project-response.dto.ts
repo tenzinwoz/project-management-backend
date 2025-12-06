@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { ProjectStatus } from 'src/projects/constants';
+import { PaginatedResponseDto } from 'src/shared/dto/pagination.dto';
 
 export class ProjectResponseDto {
   @ApiProperty()
@@ -17,7 +18,6 @@ export class ProjectResponseDto {
 
   @ApiProperty()
   @Expose()
-  @Transform(({ obj }) => obj.user?.id)
   userId: number;
 
   @ApiProperty({
@@ -29,4 +29,12 @@ export class ProjectResponseDto {
   @ApiProperty()
   @Expose()
   status: ProjectStatus;
+}
+
+export class ProjectPaginatedResponseDto extends PaginatedResponseDto<ProjectResponseDto> {
+  @ApiProperty({
+    type: [ProjectResponseDto], // Explicitly tells Swagger what the array contains
+    description: 'Array of project records',
+  })
+  data: ProjectResponseDto[];
 }

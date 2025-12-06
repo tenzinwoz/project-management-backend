@@ -1,9 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { ProjectStatus } from 'src/projects/constants';
@@ -17,13 +18,13 @@ export class CreateProjectDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'A brief description of the project',
     example: 'Development of a new company website',
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  description?: string;
 
   @ApiProperty({
     description: 'The ID of the user creating the project',
@@ -33,10 +34,11 @@ export class CreateProjectDto {
   @IsNotEmpty()
   userId: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'The IDs of the members involved in the project',
     example: [1, 2, 3],
   })
+  @IsOptional()
   @IsArray()
   @IsNumber({}, { each: true })
   members: number[];
