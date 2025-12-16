@@ -7,6 +7,7 @@ import {
   ProjectPaginatedResponseDto,
   ProjectResponseDto,
 } from 'src/projects/dto/project-response.dto';
+import { UpdateProjectMemberDto } from 'src/projects/dto/update-project-member.dto';
 import { UpdateProjectDto } from 'src/projects/dto/update-project.dto';
 
 import { ProjectEntity } from 'src/projects/entity/project.entity';
@@ -146,5 +147,49 @@ export class ProjectsService {
       meta,
       links,
     };
+  }
+
+  async updateProjectMembers(
+    id: number,
+    members: UpdateProjectMemberDto,
+  ): Promise<ProjectResponseDto> {
+    const project = await this.projectRepo.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+    if (!project) {
+      throw new BadRequestException('Project not found');
+    }
+
+    // Add members
+    if (members.add && members.add.length > 0) {
+      const currentMembers = project.members || [];
+
+      const usersToAdd = members.add.filter(
+        (memberId) => !currentMembers.includes(memberId),
+      );
+
+      project.members = [...project.members, ...usersToAdd];
+    }
+
+    // Remove members
+    if (members.remove && members.remove.length > 0) {
+      const currentMembers = project.members || [];
+
+      const membersToRemove = members.remove.filter((memberId) =>
+        currentMembers.includes(memberId),
+      );
+
+      project.members = currentMembers.filter(
+        (memberId) => !membersToRemove.includes(memberId),
+      );
+    }
+
+    const updatedProject = await this.projectRepo.save(project);
+
+    return plainToInstance(ProjectResponseDto, {
+      ...updatedProject,
+      userId: updatedProject?.user?.id,
+    });
   }
 }

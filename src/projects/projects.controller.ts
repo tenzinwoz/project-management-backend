@@ -24,6 +24,7 @@ import {
   ProjectPaginatedResponseDto,
   ProjectResponseDto,
 } from 'src/projects/dto/project-response.dto';
+import { UpdateProjectMemberDto } from 'src/projects/dto/update-project-member.dto';
 import { UpdateProjectDto } from 'src/projects/dto/update-project.dto';
 
 import { ProjectsService } from 'src/projects/projects.service';
@@ -95,7 +96,7 @@ export class ProjectsController {
   @ApiOperation({ summary: 'Get paginated projects' })
   @ApiAcceptedResponse({
     description: 'The projects have been successfully retrieved.',
-    // type: [ProjectResponseDto],
+    type: [ProjectPaginatedResponseDto],
   })
   @ApiBadRequestResponse({ description: 'Invalid query parameters.' })
   @HttpCode(HttpStatus.OK)
@@ -104,5 +105,32 @@ export class ProjectsController {
     @Query() projectQueryFilter: ProjectFilterQueryDto,
   ): Promise<ProjectPaginatedResponseDto> {
     return this.projectsService.getProjects(projectQueryFilter);
+  }
+
+  //TODO: FIX THIS BETTER
+  @ApiOperation({ summary: 'Add or remove members' })
+  @ApiAcceptedResponse({
+    description: 'The project has been successfully updated.',
+    type: ProjectResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid project ID or input data.' })
+  @HttpCode(HttpStatus.OK)
+  @Patch('/:id/members')
+  async updateProjectMembers(
+    @Param('id', ParseIntPipe) id: number,
+    @Body()
+    updateMemberDto: UpdateProjectMemberDto,
+  ) {
+    const project = await this.projectsService.updateProjectMembers(
+      id,
+      updateMemberDto,
+    );
+    // Removes user relation object
+    const cleanedProject = plainToInstance(ProjectResponseDto, project, {
+      excludeExtraneousValues: true,
+    });
+
+    // add userId field
+    return { ...cleanedProject, userId: project.userId };
   }
 }
