@@ -36,6 +36,9 @@ export class ProjectEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ name: 'deleted', type: 'boolean', default: false })
+  deleted: boolean;
+
   @ManyToOne(() => UserEntity, (user) => user.projects)
   user: UserEntity;
 }

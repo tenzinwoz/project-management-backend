@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -14,6 +15,8 @@ import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -107,7 +110,6 @@ export class ProjectsController {
     return this.projectsService.getProjects(projectQueryFilter);
   }
 
-  //TODO: FIX THIS BETTER
   @ApiOperation({ summary: 'Add or remove members' })
   @ApiAcceptedResponse({
     description: 'The project has been successfully updated.',
@@ -132,5 +134,20 @@ export class ProjectsController {
 
     // add userId field
     return { ...cleanedProject, userId: project.userId };
+  }
+
+  @ApiOperation({ summary: 'Delete project by ID' })
+  @ApiNoContentResponse({
+    description: 'The user has been successfully deactivated.',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found (e.g., the provided ID does not exist).',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid ID format.',
+  })
+  @Delete('/:id')
+  async deleteProject(@Param('id', ParseIntPipe) id: number) {
+    return this.projectsService.deleteProject(id);
   }
 }

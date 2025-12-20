@@ -7,6 +7,7 @@ import { typeOrmConfig } from 'src/shared/database/pm-db';
 import { GlobalJwtModule } from 'src/shared/jwt/global-jwt.module';
 import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 import { ProjectsModule } from './projects/projects.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProjectsModule } from './projects/projects.module';
     AuthModule,
     UsersModule,
     ProjectsModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [JwtAuthGuard],

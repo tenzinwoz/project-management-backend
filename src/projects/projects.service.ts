@@ -155,41 +155,44 @@ export class ProjectsService {
   ): Promise<ProjectResponseDto> {
     const project = await this.projectRepo.findOne({
       where: { id },
-      relations: ['user'],
     });
     if (!project) {
       throw new BadRequestException('Project not found');
     }
 
-    // Add members
-    if (members.add && members.add.length > 0) {
-      const currentMembers = project.members || [];
+    const existingMembers = project.members || [];
+    console.log(existingMembers, 'existing Member');
 
-      const usersToAdd = members.add.filter(
-        (memberId) => !currentMembers.includes(memberId),
-      );
+    let newMembers = existingMembers;
 
-      project.members = [...project.members, ...usersToAdd];
-    }
-
-    // Remove members
-    if (members.remove && members.remove.length > 0) {
-      const currentMembers = project.members || [];
-
-      const membersToRemove = members.remove.filter((memberId) =>
-        currentMembers.includes(memberId),
-      );
-
-      project.members = currentMembers.filter(
-        (memberId) => !membersToRemove.includes(memberId),
+    if (!!members.remove.length) {
+      newMembers = newMembers.filter(
+        (memberId) => !members.remove.includes(memberId),
       );
     }
+
+    if (!!members.add.length) {
+      newMembers = Array.from(new Set([...newMembers, ...members.add]));
+    }
+
+    project.members = newMembers;
 
     const updatedProject = await this.projectRepo.save(project);
 
     return plainToInstance(ProjectResponseDto, {
       ...updatedProject,
       userId: updatedProject?.user?.id,
+    });
+  }
+
+  async deleteProject(id: number): Promise<void> {
+    const project = await this.projectRepo.findOne({ where: { id } });
+    if (!project) {
+      throw new BadRequestException('Project not found');
+    }
+
+    await this.projectRepo.update(id, {
+      deleted: true,
     });
   }
 }
